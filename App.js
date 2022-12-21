@@ -7,64 +7,49 @@
  */
 
 import React from 'react';
-import type {Node} from 'react';
 import {
   Button,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
-  Text,
-  useColorScheme,
-  View,
   NativeModules,
+  SafeAreaView,
+  StatusBar,
+  Text,
 } from 'react-native';
-import {Box, NativeBaseProvider} from 'native-base';
-const {CalendarModule} = NativeModules;
+const {SelectContact} = NativeModules;
 
-/* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
- * LTI update could not be added via codemod */
-const NewModuleButton = () => {
-  // const onPress = () => {
-  //   CalendarModule.createCalendarEvent('Simform', 'Ahmedabad');
-  //   console.log('We will invoke the native module here!');
-  // };
+const fetchContacts = async () => {
+  console.log('SelectContact', SelectContact);
+  const selection = await SelectContact.openContactSelection();
+  if (!selection) {
+    console.log('no Selection', selection);
+    return null;
+  }
 
-  return (
-    <Button
-      title="Click to invoke your native module!"
-      color="#841584"
-      // onPress={onPress}
-    />
-  );
+  console.log('selection', selection);
+  // let {contact, selectedPhone} = selection;
+  // console.log(
+  //   `Selected ${selectedPhone.type} phone number ${selectedPhone.number} from ${contact.name}`,
+  // );
+  // return selectedPhone.number;
 };
 
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
+const GetContacts = () => {
+  return <Button title="Contacts" color="#841584" onPress={fetchContacts} />;
+};
 
+const App = () => {
   return (
-    <NativeBaseProvider>
-      <Box>Hello world</Box>
-    </NativeBaseProvider>
+    <SafeAreaView style={styles.center}>
+      <GetContacts />
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  center: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
